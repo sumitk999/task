@@ -36,6 +36,7 @@ exports.fileUpload = (req, res, next) => {
             
             return res.status(400).send(err.message)
         }
+        //trtt
         else if(err) {
             return res.status(400).send(err.message)
             
