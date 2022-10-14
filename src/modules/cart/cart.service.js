@@ -57,24 +57,30 @@ const remove = async (req) =>{
 
     const prod = checkProduct.products
     if(!prod.length) return "Your cart is empty!"
-    
+    let flag = false
     for(let i=0;i<prod.length;i++) {
       
         if (prod[i]._id.toString() == data.productId) {
 
             if(prod[i].count >1){
                 prod[i].count-=1
+                flag =true
             }
             else{
                 prod.splice(i,1)
+                flag=true
             }
             
             break
         }
        
     }
-    const del = await cartModel.findOneAndUpdate({ userId: data.userId },{ $inc: { totalPrice: -productData.price,count:-1 } ,products:prod}, { new: true })
-    return del
+    if(flag){
+        const del = await cartModel.findOneAndUpdate({ userId: data.userId },{ $inc: { totalPrice: -productData.price,count:-1 } ,products:prod}, { new: true })
+        return del
+    }
+    return "Product not found to delete"
+    
 
 
 }
