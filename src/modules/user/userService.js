@@ -1,6 +1,6 @@
 const userModel = require('./userModel')
 const jwt = require('jsonwebtoken')
-const multer = require('multer')
+const bcrypt = require('bcrypt')
 
 
 
@@ -8,7 +8,10 @@ const userReg = async (req) => {
     const data = req.body
 // console.log(req.file);
 data.profilePic = req.file.path
-   
+   const password =await bcrypt.hash(data.pass,10)
+
+   console.log(password);
+   data.pass = password
    
     const usernameExists = await userModel.findOne({ userName: data.userName })
     // if(usernameExists) return "This username already exists"
@@ -20,9 +23,11 @@ data.profilePic = req.file.path
 const userLogin = async (req) => {
     const data = req.body
 
-    const user = await userModel.findOne(data)
+    const user = await userModel.findOne({userName:data.userName})
+    
+    const compare  = await bcrypt.compare(data.pass,user.pass)
 
-    if (user) {
+    if (compare) {
         const token = jwt.sign(
             {
                 userId: user._id,

@@ -3,8 +3,6 @@ const userService = require('./userService')
 
 const registerUser = async (req,res,next) =>{
     try {
-        const {files}=req;
-       
         const response = await userService.userReg(req)
         return res.status(201).json(response)
     } catch (error) {
